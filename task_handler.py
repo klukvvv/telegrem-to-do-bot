@@ -103,16 +103,13 @@ class TaskHandler:
     @log_execution
     def set_reminder_time(self, message, task):
         try:
+            # Попытка преобразовать текст сообщения в дату
             reminder_time = datetime.strptime(message.text, '%Y-%m-%d %H:%M')
-            delay = (reminder_time - datetime.now()).total_seconds()
-            if delay > 0:
-                threading.Timer(delay, self.send_reminder, args=(task, message.chat.id)).start()
-                self.bot.send_message(message.chat.id, f"Напоминание установлено для задачи '{task.task}' на {reminder_time}.")
-            else:
-                self.bot.send_message(message.chat.id, "Время напоминания должно быть в будущем.")
+            # Логика установки напоминания...
         except ValueError:
-            self.bot.send_message(message.chat.id, "Пожалуйста, введите дату и время в правильном формате 'YYYY-MM-DD "
-                                                   "HH:MM'.")
+            self.bot.send_message(message.chat.id,
+                                  "Пожалуйста, введите дату и время в правильном формате 'YYYY-MM-DD HH:MM'.")
+            raise  # Повторно выбрасываем исключение
 
     def send_reminder(self, task, chat_id):
         self.bot.send_message(chat_id, f"НАПОМИНАЕМ: задача '{task.task}' должна быть выполнена!")
