@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from bot import start_message, help_message, handle_add_task, handle_list_tasks, handle_mark_task_done, \
+from bot import start_message, handle_add_task, handle_list_tasks, handle_mark_task_done, \
     handle_delete_all_tasks, handle_set_reminder, handle_delete_task
 
 
@@ -29,15 +29,6 @@ class TestTelegramBot(unittest.TestCase):
 
         self.bot_mock.send_message.assert_called_once_with(12345, "СТАРТУЕМ", reply_markup=markup_mock)
         self.logger_mock.info.assert_called_once_with("Пользователь 12345 запустил бота.")
-
-    def test_help_message(self):
-        self.message_mock.chat.id = 12345
-        self.bot_mock.send_message = MagicMock()
-
-        help_message(self.message_mock, self.bot_mock, self.logger_mock)
-
-        self.bot_mock.send_message.assert_called_once_with(12345, 'текст')
-        self.logger_mock.info.assert_called_once_with("Пользователь 12345 запросил помощь.")
 
     def test_handle_add_task(self):
         self.message_mock.text = "Добавить задачу"

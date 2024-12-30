@@ -13,12 +13,6 @@ def start_message(message, bot, logger, markup):
     logger.info(f"Пользователь {message.chat.id} запустил бота.")
 
 
-def help_message(message, bot, logger):
-    help_text = 'текст'
-    bot.send_message(message.chat.id, help_text)
-    logger.info(f"Пользователь {message.chat.id} запросил помощь.")
-
-
 def handle_add_task(message, task_handler):
     task_handler.add_task(message)
 
@@ -62,10 +56,6 @@ def main():
     @bot.message_handler(commands=['start'])
     def start_cmd(message):
         start_message(message, bot, logger, markup)
-
-    @bot.message_handler(commands=['help'])
-    def help_cmd(message):
-        help_message(message, bot, logger)
 
     @bot.message_handler(func=lambda message: message.text == "Добавить задачу")
     def add_task_cmd(message):
