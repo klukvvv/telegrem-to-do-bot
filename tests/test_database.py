@@ -33,9 +33,9 @@ class TestDatabase(unittest.TestCase):
 
     def test_add_duplicate_user(self):
         self.db.add_user(chat_id=12345, username='testuser')
-        self.db.add_user(chat_id=12345, username='anotheruser')  # Дубликат
+        self.db.add_user(chat_id=12345, username='anotheruser')
         user = self.db.get_user_by_chat_id(12345)
-        self.assertEqual(user.username, 'testuser')  # Имя пользователя не должно измениться
+        self.assertEqual(user.username, 'testuser')
 
     def test_add_task(self):
         self.db.add_user(chat_id=12345, username='testuser')
