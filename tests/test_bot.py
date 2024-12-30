@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from bot import main, start_message, help_message, handle_add_task, handle_list_tasks, handle_mark_task_done, handle_set_reminder, handle_delete_task, handle_delete_all_tasks
+from bot import start_message, help_message, handle_add_task, handle_list_tasks, handle_mark_task_done, \
+    handle_delete_all_tasks, handle_set_reminder, handle_delete_task
 
 
 class TestTelegramBot(unittest.TestCase):
@@ -11,7 +12,6 @@ class TestTelegramBot(unittest.TestCase):
         self.task_handler_mock = MagicMock()
         self.message_mock = MagicMock()
 
-        # Патчим зависимости
         patch('bot.setup_logger', return_value=self.logger_mock).start()
         patch('bot.telebot.TeleBot', return_value=self.bot_mock).start()
         patch('bot.Database', return_value=self.db_mock).start()

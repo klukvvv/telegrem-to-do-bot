@@ -5,17 +5,14 @@ from utils.decorators import log_execution
 from utils.iterators import TaskIterator
 from datetime import datetime
 import threading
-#
-# markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-# markup.add('Добавить задачу')
-# markup.add('Список задач')
-# markup.add('Выполнить задачу')
-# markup.add('Установить напоминание')
-# markup.add('Удалить задачу')
-# markup.add('Удалить все задачи')
 
-
-
+markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+markup.add('Добавить задачу')
+markup.add('Список задач')
+markup.add('Выполнить задачу')
+markup.add('Установить напоминание')
+markup.add('Удалить задачу')
+markup.add('Удалить все задачи')
 
 
 class TaskHandler:
@@ -103,13 +100,18 @@ class TaskHandler:
     @log_execution
     def set_reminder_time(self, message, task):
         try:
-            # Попытка преобразовать текст сообщения в дату
             reminder_time = datetime.strptime(message.text, '%Y-%m-%d %H:%M')
-            # Логика установки напоминания...
+            delay = (reminder_time - datetime.now()).total_seconds()
+            if delay > 0:
+                threading.Timer(delay, self.send_reminder, args=(task, message.chat.id)).start()
+                self.bot.send_message(message.chat.id, f"Напоминание установлено для задачи '{task.task}' на {reminder_time}.")
+            else:
+                self.bot.send_message(message.chat.id, "Время напоминания должно быть в будущем.")
         except ValueError:
+            print("ValueError raised")
             self.bot.send_message(message.chat.id,
-                                  "Пожалуйста, введите дату и время в правильном формате 'YYYY-MM-DD HH:MM'.")
-            raise  # Повторно выбрасываем исключение
+                                      "Пожалуйста, введите дату и время в правильном формате 'YYYY-MM-DD HH:MM'.")
+            raise
 
     def send_reminder(self, task, chat_id):
         self.bot.send_message(chat_id, f"НАПОМИНАЕМ: задача '{task.task}' должна быть выполнена!")

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, MagicMock
 from datetime import datetime, timedelta
-from task_handler import TaskHandler  # Замените на имя вашего модуля
+from task_handler import TaskHandler
 
 
 class TestTaskHandler(unittest.TestCase):
@@ -102,18 +102,14 @@ class TestTaskHandler(unittest.TestCase):
         task = Mock(task="Test Task", task_id=1)
         tasks = [task]
 
-        # Сначала вызываем schedule_reminder
         self.handler.schedule_reminder(message, tasks)
 
-        # Теперь вызываем set_reminder_time с некорректным форматом даты
         invalid_message = Mock()
         invalid_message.text = "invalid date"
 
-        # Проверяем, что ValueError будет выброшено
         with self.assertRaises(ValueError):
             self.handler.set_reminder_time(invalid_message, task)
 
-        # Убедитесь, что отправлено сообщение об ошибке
         self.bot.send_message.assert_called_with(invalid_message.chat.id,
                                                  "Пожалуйста, введите дату и время в правильном формате 'YYYY-MM-DD HH:MM'.")
 
